@@ -8,7 +8,7 @@ const totalLikes = (blogs) => {
 
 const favoriteBlog = blogs => {
     if (blogs.length === 0) {
-        return null; // Jos taulukko on tyhjä palautetaan null
+        return null; 
     }
     
     const maxLikesBlog = blogs.reduce((maxBlog, currentBlog) => {
@@ -22,8 +22,45 @@ const favoriteBlog = blogs => {
     }
 }
 
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0) {
+        return null;
+    }
+
+    const blogCounts = {};
+
+    blogs.forEach((blog) => {
+        if (blog.author in blogCounts) {
+            blogCounts[blog.author]++;
+        } else {
+            blogCounts[blog.author] = 1;
+        }
+    });
+
+    console.log('Blog counts:', blogCounts);
+
+    let maxAuthor = null;
+    let maxBlogs = 0;
+
+    for (const author in blogCounts) {
+        if (blogCounts[author] > maxBlogs) {
+            maxAuthor = author;
+            maxBlogs = blogCounts[author];
+        }
+    }
+
+    console.log('Max Author:', maxAuthor);
+    console.log('Max Blogs:', maxBlogs);
+
+    return {
+        author: maxAuthor,
+        blogs: maxBlogs
+    };
+};
+
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 };
