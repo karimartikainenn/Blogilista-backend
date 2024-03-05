@@ -1,5 +1,16 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
+const jwt = require("jsonwebtoken");
+const User = require("../models/users");
+
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
 
 blogsRouter.get("/", (request, response) => {
   Blog.find({})
@@ -9,11 +20,19 @@ blogsRouter.get("/", (request, response) => {
     });
 });
 
-blogsRouter.post("/", (request, response) => {
+blogsRouter.post("/", async (request, response) => {
   const blog = new Blog(request.body);
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
+  const user = await User.findById(decodedToken.id);
 
   blog.save().then((result) => {
     response.status(201).json(result);
+  }).catch((error) => {
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
   });
 });
 
