@@ -1,6 +1,7 @@
-const { test, describe } = require("node:test");
+const { test, describe, after } = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
+const mongoose = require("mongoose");
 
 describe("most blogs", () => {
   test("when list has only one blog, returns the author with one blog", () => {
@@ -35,4 +36,8 @@ describe("most blogs", () => {
     const result = listHelper.mostBlogs(emptyList);
     assert.deepStrictEqual(result, null);
   });
+});
+
+after(async () => {
+  await mongoose.connection.close();
 });

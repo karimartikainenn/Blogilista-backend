@@ -6,12 +6,11 @@ const mongoose = require("mongoose");
 
 const api = supertest(app);
 
-test("can add a new blog", async () => {
+test("if likes field is not provided, it is set to 0", async () => {
   const newBlog = {
     title: "Testi Blogi",
     author: "Testi Tekijä",
     url: "https://esimerkki.fi",
-    likes: 12,
   };
 
   await api
@@ -25,7 +24,7 @@ test("can add a new blog", async () => {
     (blog) => blog.title === newBlog.title && blog.author === newBlog.author
   );
 
-  assert.ok(addedBlog);
+  assert.strictEqual(addedBlog.likes, 0);
 });
 
 after(async () => {
