@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 test("These are two blogs", async () => {
   const response = await api.get("/api/blogs");
   assert.strictEqual(response.body.length, 2);
